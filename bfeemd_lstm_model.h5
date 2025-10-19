@@ -1,0 +1,27 @@
+import numpy as np
+import pandas as pd
+from tensorflow.keras.models import load_model
+
+# Load the trained model
+model = load_model("results/bfeemd_lstm_model.h5")
+
+print("🔹 Electricity Load Prediction System 🔹")
+print("Enter the details below:")
+
+# Get input from user
+hour = int(input("Enter Hour (0-23): "))
+day = int(input("Enter Day (1-31): "))
+month = int(input("Enter Month (1-12): "))
+dayofweek = int(input("Enter Day of Week (0=Mon, 6=Sun): "))
+
+# Create input array
+input_data = np.array([[hour, day, month, dayofweek]])
+
+# Reshape for LSTM [samples, time steps, features]
+input_data = np.reshape(input_data, (input_data.shape[0], input_data.shape[1], 1))
+
+# Predict
+predicted_load = model.predict(input_data)
+
+print("\n⚡ Predicted Electricity Load:")
+print(f"Estimated Load: {predicted_load[0][0]:.2f} units")
